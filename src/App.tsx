@@ -1,23 +1,15 @@
-// Connects the modules (React version of the original src/main.ts).
-// The API, logic and storage files are copied unchanged from shopboard.
+// Owns the app's state and connects the feature modules
 import { useEffect, useState } from "react";
 
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import RegisterForm from "./components/RegisterForm";
-import Footer from "./components/Footer";
 import Toast from "./shared/ui/Toast";
 import { useToast } from "./shared/ui/useToast";
 
-// Products
-import type { Product, ProductFilters } from "./modules/products/products.types";
-import { getProducts } from "./modules/products/products.api";
-import { catalogTotal } from "./modules/products/products.logic";
-import ProductsSection, { type ProductsView } from "./modules/products/ProductsSection";
-import { DEFAULT_FILTERS } from "./modules/products/products.defaults";
-
-// Cart
-import type { Cart, CartAction } from "./modules/cart/cart.types";
+import CartSection from "./modules/cart/CartSection";
+import { cartCount, cartTotal, toCartLines } from "./modules/cart/cart.logic";
 import {
   addToCart,
   changeQuantity,
@@ -25,8 +17,12 @@ import {
   getCart,
   removeFromCart,
 } from "./modules/cart/cart.state";
-import { cartCount, cartTotal, toCartLines } from "./modules/cart/cart.logic";
-import CartSection from "./modules/cart/CartSection";
+import type { Cart, CartAction } from "./modules/cart/cart.types";
+
+import ProductsSection, { type ProductsStatus } from "./modules/products/ProductsSection";
+import { getProducts } from "./modules/products/products.api";
+import { DEFAULT_FILTERS } from "./modules/products/products.defaults";
+import type { Product, ProductFilters } from "./modules/products/products.types";
 
 const cartActions: Record<CartAction, (id: number) => void> = {
   increase: (id) => changeQuantity(id, 1),
@@ -36,91 +32,78 @@ const cartActions: Record<CartAction, (id: number) => void> = {
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [view, setView] = useState<ProductsView>("loading");
-  const [catalogTotalValue, setCatalogTotalValue] = useState<number | null>(null);
+  const [status, setStatus] = useState<ProductsStatus>("loading");
+  // Changing this number runs the loading effect again
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [filters, setFilters] = useState<ProductFilters>(DEFAULT_FILTERS);
 
-  // cart.state.ts stays the single owner of the cart and localStorage;
-  // this state only mirrors it so React redraws after every change
+  // cart.state.ts owns the cart and localStorage; this copy makes React redraw after a change
   const [cart, setCart] = useState<Cart>(getCart);
-  // The original draws the cart only after products load or after a cart action
-  const [cartDrawn, setCartDrawn] = useState(false);
 
   const { toast, showToast } = useToast();
 
-  // Load products once (the original start() function)
   useEffect(() => {
-    // In development StrictMode runs effects twice; only the last run updates the page
+    // Set by the cleanup, so an old request cannot overwrite a newer one
     let ignore = false;
 
-    async function start(): Promise<void> {
-      let loaded: Product[];
+    async function loadProducts(): Promise<void> {
       try {
-        loaded = await getProducts(); // get
-      } catch (error) {
+        const loaded = await getProducts();
         if (ignore) return;
-        console.error(error);
-        setView("error");
-        return;
+        setProducts(loaded);
+        setStatus("ready");
+      } catch {
+        if (!ignore) setStatus("error");
       }
-      if (ignore) return;
-      setProducts(loaded); // draw
-      setCatalogTotalValue(catalogTotal(loaded));
-      setView("list");
-      setCartDrawn(true);
     }
 
-    start();
+    void loadProducts();
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [loadAttempt]);
 
-  function updateCart(): void {
-    setCart(getCart());
-    setCartDrawn(true);
-  }
-
-  function handleFiltersChange(next: ProductFilters): void {
-    setFilters(next);
-    setView("list");
+  function handleRetry(): void {
+    setStatus("loading");
+    setLoadAttempt((attempt) => attempt + 1);
   }
 
   function handleAddToCart(id: number): void {
     addToCart(id);
-    updateCart();
+    setCart(getCart());
     showToast("Added to cart");
   }
 
   function handleCartAction(action: CartAction, id: number): void {
     cartActions[action](id);
-    updateCart();
+    setCart(getCart());
   }
 
   function handleClearCart(): void {
     clearCart();
-    updateCart();
+    setCart(getCart());
   }
 
   const lines = toCartLines(cart, products);
 
   return (
     <>
-      <Header cartCount={cartDrawn ? cartCount(lines) : 0} />
+      <Header cartCount={cartCount(lines)} />
 
       <main>
         <Hero />
         <ProductsSection
-          view={view}
+          status={status}
           products={products}
           filters={filters}
-          catalogTotal={catalogTotalValue}
-          onFiltersChange={handleFiltersChange}
+          onFiltersChange={setFilters}
           onAddToCart={handleAddToCart}
+          onRetry={handleRetry}
         />
         <CartSection
-          lines={cartDrawn ? lines : null}
+          lines={lines}
           total={cartTotal(lines)}
+          isWaitingForProducts={status !== "ready" && cart.length > 0}
           onCartAction={handleCartAction}
           onClearCart={handleClearCart}
         />
