@@ -1,4 +1,4 @@
-// Same as the original: native HTML validation only, no JavaScript handling
+// Native HTML validation only, no JavaScript handling
 export default function RegisterForm() {
   return (
     <section className="register" id="register" aria-labelledby="register-title">

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export interface ToastState {
+interface ToastState {
   message: string;
   visible: boolean;
 }
 
-// Same timing as the original showToast: show, restart the timer on every call,
-// hide after `duration` ms. The text stays in place after hiding (only the class goes).
+// Shows a message, restarts the timer on every call and hides it after `duration` ms.
+// The text stays in place after hiding (only the class goes).
 export function useToast() {
   const [toast, setToast] = useState<ToastState>({ message: "", visible: false });
   const hideTimer = useRef<number | undefined>(undefined);

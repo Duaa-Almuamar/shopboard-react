@@ -1,4 +1,5 @@
 import { DEFAULT_FILTERS } from "./products.defaults";
+import { isCategoryFilter, isPriceRange, isSortOrder } from "./products.guards";
 import type { ProductFilters as Filters } from "./products.types";
 
 interface ProductFiltersProps {
@@ -24,7 +25,6 @@ export default function ProductFilters({ filters, onChange }: ProductFiltersProp
           placeholder="Product name"
           autoComplete="off"
           value={filters.search}
-          // onChange fires on every keystroke, so results update while typing
           onChange={(event) => onChange({ ...filters, search: event.target.value })}
         />
       </p>
@@ -36,9 +36,10 @@ export default function ProductFilters({ filters, onChange }: ProductFiltersProp
           id="price-filter"
           name="price"
           value={filters.price}
-          onChange={(event) =>
-            onChange({ ...filters, price: event.target.value as Filters["price"] })
-          }
+          onChange={(event) => {
+            const price = event.target.value;
+            if (isPriceRange(price)) onChange({ ...filters, price });
+          }}
         >
           <option value="all">All prices</option>
           <option value="under-50">Under $50</option>
@@ -54,9 +55,10 @@ export default function ProductFilters({ filters, onChange }: ProductFiltersProp
           id="category-filter"
           name="category"
           value={filters.category}
-          onChange={(event) =>
-            onChange({ ...filters, category: event.target.value as Filters["category"] })
-          }
+          onChange={(event) => {
+            const category = event.target.value;
+            if (isCategoryFilter(category)) onChange({ ...filters, category });
+          }}
         >
           <option value="all">All categories</option>
           <option value="Bags">Bags</option>
@@ -72,9 +74,10 @@ export default function ProductFilters({ filters, onChange }: ProductFiltersProp
           id="sort-select"
           name="sort"
           value={filters.sort}
-          onChange={(event) =>
-            onChange({ ...filters, sort: event.target.value as Filters["sort"] })
-          }
+          onChange={(event) => {
+            const sort = event.target.value;
+            if (isSortOrder(sort)) onChange({ ...filters, sort });
+          }}
         >
           <option value="default">Default</option>
           <option value="price-asc">Price: low to high</option>
