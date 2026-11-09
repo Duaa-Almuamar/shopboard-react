@@ -1,0 +1,25 @@
+/* Theme and utilities only: Tailwind's reset would change the styles in base.css */
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+/* Listed by hand: Windows Application Control can block the program Tailwind uses to
+   find classes in the source files. Add a class here when a shadcn/ui file starts using it. */
+@source inline("aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-transparent border border-input data-[invalid=true]:text-destructive disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none flex flex-col focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium font-normal gap-2 gap-5 group-data-[disabled=true]:opacity-50 group-data-[disabled=true]:pointer-events-none h-9 inline-flex items-center justify-center leading-none leading-snug min-w-0 outline-none peer-disabled:cursor-not-allowed peer-disabled:opacity-50 placeholder:text-muted-foreground px-3 py-1 rounded-md select-none shadow-xs shrink-0 text-base text-destructive text-sm transition-[color,box-shadow] w-fit w-full whitespace-nowrap");
+
+/* Points the shadcn/ui color names at the store's design tokens */
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text-h);
+  --color-primary: var(--black);
+  --color-primary-foreground: var(--white);
+  --color-secondary: var(--ivory);
+  --color-secondary-foreground: var(--black);
+  --color-muted: var(--ivory);
+  --color-muted-foreground: var(--text);
+  --color-accent: var(--ivory);
+  --color-accent-foreground: var(--black);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--gold);
+  --color-destructive: var(--danger);
+}
