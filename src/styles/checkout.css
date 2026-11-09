@@ -1,0 +1,37 @@
+/* ---------- Checkout ---------- */
+.checkout-layout {
+  display: grid;
+  gap: var(--space-l);
+}
+
+.order-summary {
+  padding: var(--space-l);
+  background: var(--ivory);
+}
+
+.order-summary-title {
+  font-family: var(--serif);
+  font-size: var(--font-h3);
+  margin-bottom: var(--space-m);
+}
+
+.order-lines {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-m);
+}
+
+.order-line {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-m);
+  padding: var(--space-s) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 768px) {
+  .checkout-layout {
+    grid-template-columns: 1fr minmax(0, 400px);
+    align-items: start;
+  }
+}
