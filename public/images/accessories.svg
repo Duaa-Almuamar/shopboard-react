@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef0e4"/>
+      <stop offset="1" stop-color="#e2e5d2"/>
+    </linearGradient>
+    <linearGradient id="strap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a5d36"/>
+      <stop offset="1" stop-color="#6e4b2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#bg)"/>
+  <circle cx="318" cy="404" r="58" fill="#c9cfae"/>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M172 92 H228 L222 186 H178 Z" fill="url(#strap)" stroke="#5a3d25" stroke-width="2.5"/>
+    <path d="M178 314 H222 L228 408 H172 Z" fill="url(#strap)" stroke="#5a3d25" stroke-width="2.5"/>
+    <path d="M186 110 V170 M214 110 V170 M186 330 V392 M214 330 V392" stroke="#d9c08f" stroke-width="1.5" stroke-dasharray="4 5"/>
+    <circle cx="200" cy="250" r="76" fill="#b5844f" stroke="#5a3d25" stroke-width="2.5"/>
+    <circle cx="200" cy="250" r="62" fill="#eef0e4" stroke="#4f5d3a" stroke-width="3"/>
+    <path d="M200 196 V204 M200 296 V304 M146 250 H154 M246 250 H254" stroke="#6b7a4b" stroke-width="3"/>
+    <path d="M200 250 V212" stroke="#2f3a2a" stroke-width="3"/>
+    <path d="M200 250 L226 264" stroke="#2f3a2a" stroke-width="3"/>
+  </g>
+  <circle cx="200" cy="250" r="5" fill="#6b7a4b"/>
+  <rect x="276" y="242" width="12" height="16" rx="2" fill="#8a5d36"/>
+</svg>

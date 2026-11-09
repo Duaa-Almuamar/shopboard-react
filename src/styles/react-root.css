@@ -1,0 +1,6 @@
+/* React renders the app inside <div id="root">. "display: contents" makes that
+   wrapper invisible to layout, so header/main/footer stay direct flex children
+   of <body> exactly as in the original shopboard (main grows, footer stays at the bottom). */
+#root {
+  display: contents;
+}
