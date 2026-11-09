@@ -1,51 +1,43 @@
-// Draws the cart and reports its buttons. Does not calculate or save.
+import { use } from "react";
+import { Link } from "react-router";
+
 import { formatPrice } from "../../shared/format/price";
+import { readProducts } from "../products/products.cache";
 import CartLineItem from "./CartLineItem";
-import type { CartAction, CartLine } from "./cart.types";
+import EmptyCartMessage from "./EmptyCartMessage";
+import { cartTotal, toCartLines } from "./cart.logic";
+import { useCartStore } from "./cart.state";
 
-interface CartSectionProps {
-  lines: CartLine[];
-  total: number;
-  // A saved cart holds only ids, so its lines cannot be drawn until the products arrive
-  isWaitingForProducts: boolean;
-  onCartAction: (action: CartAction, id: number) => void;
-  onClearCart: () => void;
-}
+export default function CartContents() {
+  const cart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const products = use(readProducts());
 
-export default function CartSection({
-  lines,
-  total,
-  isWaitingForProducts,
-  onCartAction,
-  onClearCart,
-}: CartSectionProps) {
-  const hasItems = lines.length > 0;
+  const lines = toCartLines(cart, products);
+
+  // A saved cart can hold products the store no longer sells
+  if (lines.length === 0) {
+    return <EmptyCartMessage />;
+  }
 
   return (
-    <section className="cart" id="cart" aria-labelledby="cart-title">
-      <h2 className="section-title" id="cart-title">
-        Shopping cart
-      </h2>
-      {isWaitingForProducts && (
-        <p className="cart-empty">Your saved cart will appear when the products load.</p>
-      )}
-      {!isWaitingForProducts && !hasItems && <p className="cart-empty">Your cart is empty.</p>}
+    <>
       <ul className="cart-list">
         {lines.map((line) => (
-          <CartLineItem key={line.id} line={line} onCartAction={onCartAction} />
+          <CartLineItem key={line.id} line={line} />
         ))}
       </ul>
       <p className="cart-summary" aria-live="polite">
-        Total: <strong className="cart-total">{formatPrice(total)}</strong>
+        Total: <strong className="cart-total">{formatPrice(cartTotal(lines))}</strong>
       </p>
-      <button
-        className="button button-secondary clear-cart"
-        type="button"
-        hidden={!hasItems}
-        onClick={onClearCart}
-      >
-        Clear cart
-      </button>
-    </section>
+      <div className="cart-actions">
+        <button className="button button-secondary clear-cart" type="button" onClick={clearCart}>
+          Clear cart
+        </button>
+        <Link className="button" to="/checkout">
+          Go to checkout
+        </Link>
+      </div>
+    </>
   );
 }

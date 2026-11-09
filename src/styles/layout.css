@@ -111,12 +111,12 @@
 /* ---------- Sections ---------- */
 .products,
 .cart,
+.checkout,
 .register {
   max-width: var(--page-width);
   margin-inline: auto;
   width: 100%;
   padding: var(--space-xl) var(--space-m);
-  border-top: 1px solid var(--border);
 }
 
 /* ---------- Register form ---------- */
@@ -196,7 +196,12 @@
 
   .products,
   .cart,
+  .checkout,
   .register {
     padding: var(--space-xxl) var(--space-xl);
   }
+}
+
+.nav-link[aria-current="page"] {
+  color: var(--gold-text);
 }

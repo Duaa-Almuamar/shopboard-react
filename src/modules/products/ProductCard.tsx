@@ -1,19 +1,15 @@
-import { formatPrice } from "../../shared/format/price";
-import type { Category, Product } from "./products.types";
+import { Link } from "react-router";
 
-// One illustration per category
-const categoryImages: Record<Category, string> = {
-  Bags: "/images/bags.svg",
-  Shoes: "/images/shoes.svg",
-  Accessories: "/images/accessories.svg",
-};
+import { formatPrice } from "../../shared/format/price";
+import AddToCartButton from "./AddToCartButton";
+import { categoryImages } from "./products.images";
+import type { Product } from "./products.types";
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (id: number) => void;
 }
 
-export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export default function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="product-card">
       <img
@@ -23,18 +19,12 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         width="400"
         height="500"
       />
-      <h3 className="product-name">{product.name}</h3>
+      <h2 className="product-name">
+        <Link to={`/products/${product.id}`}>{product.name}</Link>
+      </h2>
       <p className="product-category">{product.category}</p>
       <p className="product-price">{formatPrice(product.price)}</p>
-      <button
-        className="button"
-        type="button"
-        data-id={product.id}
-        disabled={!product.inStock}
-        onClick={() => onAddToCart(product.id)}
-      >
-        {product.inStock ? "Add to cart" : "Out of stock"}
-      </button>
+      <AddToCartButton product={product} />
     </article>
   );
 }

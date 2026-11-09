@@ -29,8 +29,8 @@ export function toCartLines(cart: Cart, products: Product[]): CartLine[] {
   });
 }
 
-export function cartCount(lines: CartLine[]): number {
-  return lines.reduce((count, line) => count + line.quantity, 0);
+export function cartCount(cart: Cart): number {
+  return cart.reduce((count, item) => count + item.quantity, 0);
 }
 
 export function cartTotal(lines: CartLine[]): number {

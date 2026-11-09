@@ -1,37 +1,38 @@
-interface HeaderProps {
-  cartCount: number;
-}
+import { Link, NavLink } from "react-router";
 
-export default function Header({ cartCount }: HeaderProps) {
+import { cartCount } from "../cart/cart.logic";
+import { useCartStore } from "../cart/cart.state";
+
+const links = [
+  { to: "/", label: "Home" },
+  { to: "/products", label: "Products" },
+  { to: "/register", label: "Register" },
+];
+
+export default function Header() {
+  const count = useCartStore((state) => cartCount(state.cart));
+
   return (
     <header className="site-header">
-      <a className="logo" href="#hero" aria-label="DH Bags, home">
+      <Link className="logo" to="/" aria-label="DH Bags, home">
         <span className="logo-mark" aria-hidden="true">
           DH
         </span>
         <span className="logo-text">DH Bags</span>
-      </a>
+      </Link>
       <nav className="site-nav" aria-label="Main">
         <ul className="nav-list">
+          {links.map((link) => (
+            <li key={link.to}>
+              <NavLink className="nav-link" to={link.to} end={link.to === "/"}>
+                {link.label}
+              </NavLink>
+            </li>
+          ))}
           <li>
-            <a className="nav-link" href="#hero">
-              Home
-            </a>
-          </li>
-          <li>
-            <a className="nav-link" href="#products">
-              Products
-            </a>
-          </li>
-          <li>
-            <a className="nav-link" href="#cart">
-              Cart (<span className="cart-count">{cartCount}</span>)
-            </a>
-          </li>
-          <li>
-            <a className="nav-link" href="#register">
-              Register
-            </a>
+            <NavLink className="nav-link" to="/cart">
+              Cart (<span className="cart-count">{count}</span>)
+            </NavLink>
           </li>
         </ul>
       </nav>

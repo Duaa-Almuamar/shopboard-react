@@ -93,15 +93,16 @@
   margin-bottom: var(--space-l);
 }
 
-/* .button sets display, which would otherwise override the hidden attribute */
-.clear-cart[hidden] {
-  display: none;
-}
-
 /* ---------- Larger screens ---------- */
 @media (min-width: 600px) {
   .cart-item-name {
     flex-basis: auto;
     flex-grow: 1;
   }
+}
+
+.cart-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-m);
 }

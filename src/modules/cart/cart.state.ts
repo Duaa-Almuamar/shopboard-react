@@ -1,51 +1,34 @@
-// Holds the cart and keeps it in localStorage. No document.
-import { addItem, changeQuantity as changeItemQuantity, removeItem } from "./cart.logic";
-import { isCartItem } from "./cart.guards";
+// The cart store: the one owner of the cart. It saves itself to localStorage.
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+import { savedCart } from "./cart.guards";
+import { addItem, changeQuantity, removeItem } from "./cart.logic";
 import type { Cart } from "./cart.types";
 
-const STORAGE_KEY = "shopboard-cart";
-
-let cart: Cart = loadCart();
-
-function loadCart(): Cart {
-  try {
-    const saved: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
-    return Array.isArray(saved) ? saved.filter(isCartItem) : [];
-  } catch {
-    return [];
-  }
+interface CartStore {
+  cart: Cart;
+  addToCart: (id: number) => void;
+  changeItemQuantity: (id: number, amount: number) => void;
+  removeFromCart: (id: number) => void;
+  clearCart: () => void;
 }
 
-function saveCart(next: Cart): void {
-  cart = next;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-  } catch {
-    // Storage can be blocked (e.g. private mode); the cart still works for this visit
-  }
-}
-
-export function getCart(): Cart {
-  return cart;
-}
-
-export function addToCart(id: number): void {
-  saveCart(addItem(cart, id));
-}
-
-export function changeQuantity(id: number, amount: number): void {
-  saveCart(changeItemQuantity(cart, id, amount));
-}
-
-export function removeFromCart(id: number): void {
-  saveCart(removeItem(cart, id));
-}
-
-export function clearCart(): void {
-  cart = [];
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // Same as above: nothing to remove if storage is blocked
-  }
-}
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set) => ({
+      cart: [],
+      addToCart: (id) => set((state) => ({ cart: addItem(state.cart, id) })),
+      changeItemQuantity: (id, amount) =>
+        set((state) => ({ cart: changeQuantity(state.cart, id, amount) })),
+      removeFromCart: (id) => set((state) => ({ cart: removeItem(state.cart, id) })),
+      clearCart: () => set({ cart: [] }),
+    }),
+    {
+      name: "shopboard-cart",
+      partialize: (state) => ({ cart: state.cart }),
+      // localStorage can hold anything, so the saved cart is checked before it is used
+      merge: (saved, current) => ({ ...current, cart: savedCart(saved) }),
+    },
+  ),
+);

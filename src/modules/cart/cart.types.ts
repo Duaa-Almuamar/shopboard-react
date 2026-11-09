@@ -12,6 +12,3 @@ export type Cart = CartItem[];
 export interface CartLine extends Product {
   quantity: number;
 }
-
-// Values of data-action on the cart buttons
-export type CartAction = "increase" | "decrease" | "remove";

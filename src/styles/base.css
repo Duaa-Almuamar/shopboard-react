@@ -11,6 +11,7 @@
   --text-h: var(--black);
   --bg: var(--white);
   --border: #e6e1d8;
+  --danger: #a4262c;
 
   --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
@@ -85,6 +86,10 @@ h1 {
 h2 {
   font-size: var(--font-h2);
   margin: 0 0 var(--space-l);
+}
+
+.section-title {
+  margin-bottom: var(--space-l);
 }
 
 p {

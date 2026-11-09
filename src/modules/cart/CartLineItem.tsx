@@ -1,12 +1,15 @@
 import { formatPrice } from "../../shared/format/price";
-import type { CartAction, CartLine } from "./cart.types";
+import { useCartStore } from "./cart.state";
+import type { CartLine } from "./cart.types";
 
 interface CartLineItemProps {
   line: CartLine;
-  onCartAction: (action: CartAction, id: number) => void;
 }
 
-export default function CartLineItem({ line, onCartAction }: CartLineItemProps) {
+export default function CartLineItem({ line }: CartLineItemProps) {
+  const changeItemQuantity = useCartStore((state) => state.changeItemQuantity);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+
   return (
     <li className="cart-item">
       <span className="cart-item-name">{line.name}</span>
@@ -15,10 +18,8 @@ export default function CartLineItem({ line, onCartAction }: CartLineItemProps) 
         <button
           className="quantity-button"
           type="button"
-          data-action="decrease"
-          data-id={line.id}
           aria-label={`Decrease quantity of ${line.name}`}
-          onClick={() => onCartAction("decrease", line.id)}
+          onClick={() => changeItemQuantity(line.id, -1)}
         >
           −
         </button>
@@ -28,10 +29,8 @@ export default function CartLineItem({ line, onCartAction }: CartLineItemProps) 
         <button
           className="quantity-button"
           type="button"
-          data-action="increase"
-          data-id={line.id}
           aria-label={`Increase quantity of ${line.name}`}
-          onClick={() => onCartAction("increase", line.id)}
+          onClick={() => changeItemQuantity(line.id, 1)}
         >
           +
         </button>
@@ -40,10 +39,8 @@ export default function CartLineItem({ line, onCartAction }: CartLineItemProps) 
       <button
         className="remove-button"
         type="button"
-        data-action="remove"
-        data-id={line.id}
         aria-label={`Remove ${line.name} from cart`}
-        onClick={() => onCartAction("remove", line.id)}
+        onClick={() => removeFromCart(line.id)}
       >
         Remove
       </button>
