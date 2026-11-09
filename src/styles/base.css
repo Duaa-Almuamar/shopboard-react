@@ -12,8 +12,8 @@
   --bg: var(--white);
   --border: #e6e1d8;
 
-  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --sans: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 
   --space-xs: 4px;
   --space-s: 8px;
@@ -125,7 +125,7 @@ img {
 }
 
 .form-field select,
-.form-field input:not([type='checkbox']) {
+.form-field input:not([type="checkbox"]) {
   font: inherit;
   width: 100%;
   padding: 12px 0;
@@ -189,4 +189,3 @@ input:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
-

@@ -1,4 +1,4 @@
-const BASE_URL= 'https://shopboard-api.vercel.app';
+const BASE_URL = "https://shopboard-api.vercel.app";
 export class ApiError extends Error {
   status: number;
 

@@ -32,7 +32,9 @@ export default function ProductsSection({
   return (
     <section className="products" id="products" aria-labelledby="products-title">
       <p className="eyebrow">The collection</p>
-      <h2 className="section-title" id="products-title">Products</h2>
+      <h2 className="section-title" id="products-title">
+        Products
+      </h2>
       <p className="catalog-total">
         {catalogTotal === null ? "" : `Total value of all products: ${formatPrice(catalogTotal)}`}
       </p>

@@ -22,7 +22,9 @@ export default function CartLineItem({ line, onCartAction }: CartLineItemProps) 
         >
           −
         </button>
-        <span className="quantity" aria-label="Quantity">{line.quantity}</span>
+        <span className="quantity" aria-label="Quantity">
+          {line.quantity}
+        </span>
         <button
           className="quantity-button"
           type="button"

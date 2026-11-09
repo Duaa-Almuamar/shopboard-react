@@ -61,7 +61,9 @@
   text-decoration: none;
   color: var(--text-h);
   border-bottom: 1px solid transparent;
-  transition: border-color var(--transition), color var(--transition);
+  transition:
+    border-color var(--transition),
+    color var(--transition);
 }
 
 .nav-link:hover {

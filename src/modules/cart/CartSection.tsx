@@ -18,8 +18,12 @@ export default function CartSection({ lines, total, onCartAction, onClearCart }:
 
   return (
     <section className="cart" id="cart" aria-labelledby="cart-title">
-      <h2 className="section-title" id="cart-title">Shopping cart</h2>
-      <p className="cart-empty" hidden={hasItems}>Your cart is empty.</p>
+      <h2 className="section-title" id="cart-title">
+        Shopping cart
+      </h2>
+      <p className="cart-empty" hidden={hasItems}>
+        Your cart is empty.
+      </p>
       <ul className="cart-list">
         {drawn &&
           lines.map((line) => (
