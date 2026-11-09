@@ -1,10 +1,10 @@
 // Gets products from the server and turns the server's shape into a Product
-import { getJson } from "../../shared/api/client";
+import { fetchJson } from "../../shared/api/client";
 import { isRecord } from "../../shared/types/guards";
 import { isCategory } from "./products.guards";
 import type { Category, Product } from "./products.types";
 
-const PRODUCTS_URL = "https://shopboard-api.vercel.app/api/products";
+const PRODUCTS_PATH = "/api/products";
 
 // One product as the server sends it
 interface ProductResponse {
@@ -39,9 +39,17 @@ function toProduct(item: ProductResponse): Product {
 
 // The server sends { items: [...], total }; items that do not match the expected shape are skipped
 export async function getProducts(): Promise<Product[]> {
-  const data = await getJson(PRODUCTS_URL);
+  const data = await fetchJson(PRODUCTS_PATH);
   if (!isRecord(data) || !Array.isArray(data.items)) {
     throw new Error("Unexpected products response");
   }
   return data.items.filter(isProductResponse).map(toProduct);
+}
+
+export async function getProduct(id: number): Promise<Product> {
+  const data = await fetchJson(`${PRODUCTS_PATH}/${id}`);
+  if (!isProductResponse(data)) {
+    throw new Error("Unexpected product response");
+  }
+  return toProduct(data);
 }
