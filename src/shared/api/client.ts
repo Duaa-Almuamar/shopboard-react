@@ -1,4 +1,5 @@
-const BASE_URL = "https://shopboard-api.vercel.app";
+// The only file that calls fetch
+
 export class ApiError extends Error {
   status: number;
 
@@ -7,21 +8,15 @@ export class ApiError extends Error {
     this.status = status;
   }
 }
-export async function fetchJson<T>(path: string): Promise<T> {
-  const res = await fetch(BASE_URL + path);
 
-  if (!res.ok) {
-    throw new ApiError(res.status, `Request failed with status ${res.status}`);
-  }
-
-  return (await res.json()) as T;
-}
-export async function getJson<T>(url: string): Promise<T> {
+// The body is returned as unknown: the caller checks its shape before using it
+export async function getJson(url: string): Promise<unknown> {
   const res = await fetch(url);
 
   if (!res.ok) {
     throw new ApiError(res.status, "Request failed");
   }
 
-  return (await res.json()) as T;
+  const body: unknown = await res.json();
+  return body;
 }
